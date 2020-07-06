@@ -5,14 +5,15 @@ Identifying Reads with Inverted Terminal Repeats from Large Genomes Using Effici
 
 pal-MEM finds inverted terminal repeats (ITRs) in large genomes, including metagenomes. It is modified from the program [E-MEM](https://github.com/lucian-ilie/E-MEM) by N. Khiste, L. Ilie [E-MEM: efficient computation of maximal exact matched for very large genomes](http://bioinformatics.oxfordjournals.org/content/31/4/509.short)
 
-#### USAGE
+### USAGE
 
-pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -o <output prefix>  [options] OR
+pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -o <output prefix>  [options]
+OR
 pal-mem  -fu <single fasta file>  -o <output prefix>  [options]
 
 [options]    type 'pal-mem -h' for a list of options.
 
-#### OUTPUT
+### OUTPUT
 
 pal-MEM outputs a tab-delimited file and two fasta files. The tab-delimited file contains the original sequence names of reads containing the ITR pair with the first and second columns representing the first and second read of the pair, respectively.
 
@@ -32,11 +33,7 @@ The other fasta file contains the rest of the reads that do not contain ITRs wit
 
 ## OPTIONS
 
-The program can be run in both serial and parallel mode. The parallel mode has an advantage in terms of time with respect to serial mode.
-
-The options for pal-mem are:
-
-Options:
+The program can be run in both serial and parallel mode. The parallel mode has an advantage in terms of time with respect to serial mode. The options for pal-mem are:
 
 -l set the minimum length of a match. Default: 24
 
@@ -47,19 +44,19 @@ Options:
 -h show possible options
 
 ## EXAMPLE
-To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a split size of 20 and thread number of 8:
+To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a split size of 20 on a machine with 8 threads:
 ```
 pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -d 20 -t 8
 ```
 
 ## INSTALLATION
-pal-MEM requires a 64-bit system. First clone the repository and go into pal-MEM directory
+pal-MEM requires a 64-bit system. First clone the repository and go into the pal-MEM directory
 ```
 git clone https://github.com/blue-moon22/pal-MEM.git
 cd pal-MEM
 ```
 
-#### For Mac OS X
+### For Mac OS X
 - Install [Boost libraries for unix](https://www.boost.org/)
 - Install [cmake for Mac OS X](https://cmake.org/download/)
 - By default, Mac OS X uses clang as its compiler for C++. If not already installed, install the GCC compiler and locate the executable, which should be */usr/local/bin/g++-(version)*. Use this as the CXX option for cmake.
@@ -68,7 +65,7 @@ CXX=/usr/local/bin/g++-9 cmake .
 make
 ```
 
-#### For Linux
+### For Linux
 - Install [Boost libraries for unix](https://www.boost.org/)
 ```
 make
