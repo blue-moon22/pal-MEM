@@ -6,12 +6,13 @@ Identifying Reads with Inverted Terminal Repeats from Large Genomes Using Effici
 pal-MEM finds inverted terminal repeats (ITRs) in large genomes, including metagenomes. It is modified from the program [E-MEM](https://github.com/lucian-ilie/E-MEM) by N. Khiste, L. Ilie [E-MEM: efficient computation of maximal exact matched for very large genomes](http://bioinformatics.oxfordjournals.org/content/31/4/509.short)
 
 ### USAGE
-
+```
 pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -o <output prefix>  [options]
-
+```
 OR
-
+```
 pal-mem  -fu <single fasta file>  -o <output prefix>  [options]
+```
 
 Type *pal-mem -h* for a list of options.
 
