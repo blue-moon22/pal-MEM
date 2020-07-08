@@ -53,15 +53,19 @@ pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -d 20 -t 8
 ```
 
 ## INSTALLATION
-pal-MEM requires a 64-bit system. First clone the repository and go into the pal-MEM directory
+
+### Dependencies:
+- pal-MEM requires a 64-bit system
+- [Boost libraries for unix](https://www.boost.org/)
+- [cmake for Mac OS X](https://cmake.org/download/)
+
+First clone the repository and go into the pal-MEM directory, then follow steps below depending on your operating system.
 ```
 git clone https://github.com/blue-moon22/pal-MEM.git
 cd pal-MEM
 ```
 
 ### For Mac OS X
-- Install [Boost libraries for unix](https://www.boost.org/)
-- Install [cmake for Mac OS X](https://cmake.org/download/)
 - By default, Mac OS X uses clang as its compiler for C++. If not already installed, install the GCC compiler and locate the executable, which should be */usr/local/bin/g++-(version)*. Use this as the CXX option for cmake.
 ```
 CXX=/usr/local/bin/g++-9 cmake .
@@ -69,7 +73,6 @@ make
 ```
 
 ### For Linux
-- Install [Boost libraries for unix](https://www.boost.org/)
 ```
-make
+cmake .
 ```
