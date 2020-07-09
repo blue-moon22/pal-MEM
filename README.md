@@ -63,16 +63,26 @@ First clone the repository and go into the pal-MEM directory, then follow steps 
 ```
 git clone https://github.com/blue-moon22/pal-MEM.git
 cd pal-MEM
+mkdir build
+cd build
 ```
 
 ### For Mac OS X
-- By default, Mac OS X uses clang as its compiler for C++. If not already installed, install the GCC compiler and locate the executable, which should be */usr/local/bin/g++-(version)*. Use this as the CXX option for cmake.
+- By default, Mac OS X uses clang as its compiler for C++. If not already installed, you must install the GCC compiler and locate the executable, which should be */usr/local/bin/g++-(version)*. Use this as the CXX option for cmake.
 ```
-CXX=/usr/local/bin/g++-9 cmake .
+CXX=/usr/local/bin/g++-9 cmake ..
 make
 ```
 
 ### For Linux
 ```
-cmake .
+cmake ..
+make
+```
+
+### For Linux (where boost is not installed with root access)
+```
+PATH=$PATH:<boost_location>/include/
+BOOST_INCLUDEDIR=<boost_location>/include BOOST_LIBRARYDIR=<boost_location>/lib cmake ..
+make
 ```
