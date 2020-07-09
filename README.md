@@ -54,10 +54,10 @@ pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -d 20 -t 8
 
 ## INSTALLATION
 
-### Dependencies:
+### Requirements:
 - pal-MEM requires a 64-bit system
-- [Boost libraries for unix](https://www.boost.org/)
-- [cmake for Mac OS X](https://cmake.org/download/)
+- [Boost](https://www.boost.org/)
+- [cmake](https://cmake.org/download/)
 
 First clone the repository and go into the pal-MEM directory, then follow steps below depending on your operating system.
 ```
@@ -82,7 +82,14 @@ make
 
 ### For Linux (where boost is not installed with root access)
 ```
-PATH=$PATH:<boost_location>/include/
+boost_location=<wherever boost installed containing lib and include directories>
+LD_LIBRARY_PATH=${boost_location}/lib:$LD_LIBRARY_PATH
+LIBRARY_PATH=${boost_location}/lib:$LIBRARY_PATH
+INCLUDE=${boost_location}/include/boost:$INCLUDE
+C_INCLUDE_PATH=${boost_location}/include/boost:$C_INCLUDE_PATH
+INCLUDE_PATH=${boost_location}/include/boost:$INCLUDE_PATH
+
 BOOST_INCLUDEDIR=<boost_location>/include BOOST_LIBRARYDIR=<boost_location>/lib cmake ..
 make
 ```
+- If using HPC when running pal-mem, ensure paths are set above.
