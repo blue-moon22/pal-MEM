@@ -89,7 +89,7 @@ INCLUDE=${boost_location}/include/boost:$INCLUDE
 C_INCLUDE_PATH=${boost_location}/include/boost:$C_INCLUDE_PATH
 INCLUDE_PATH=${boost_location}/include/boost:$INCLUDE_PATH
 
-BOOST_INCLUDEDIR=<boost_location>/include BOOST_LIBRARYDIR=<boost_location>/lib cmake ..
+BOOST_INCLUDEDIR=${boost_location}/include BOOST_LIBRARYDIR=${boost_location}/lib cmake ..
 make
 ```
 - If using HPC when running pal-mem, ensure paths are set above.
