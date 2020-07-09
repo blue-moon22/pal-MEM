@@ -56,7 +56,7 @@ pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -d 20 -t 8
 
 ### Dependencies:
 - pal-MEM requires a 64-bit system
-- [Boost libraries for Linux/Mac OS X](https://www.boost.org/)
+- [Boost libraries for unix](https://www.boost.org/)
 - [cmake for Mac OS X](https://cmake.org/download/)
 
 First clone the repository and go into the pal-MEM directory, then follow steps below depending on your operating system.
@@ -74,5 +74,5 @@ make
 
 ### For Linux
 ```
-make
+cmake .
 ```
