@@ -582,7 +582,7 @@ int main (int argc, char *argv[])
                 exit(EXIT_FAILURE);
             }
             commonData::minMemLen = 2*std::stoi(argv[n+1]);
-            commonData::kmerSize = commonData::minMemLen + (1 - LEN_BUFFER/2);
+            commonData::kmerSize = commonData::minMemLen + (2 - LEN_BUFFER/2);
             n+=2;
         }else if (boost::equals(argv[n],"-d")){
             if (IS_SPLIT_SIZE_DEF(options)) {
