@@ -285,7 +285,7 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
     /* Ignore reverse complements of the same ORF, i.e. where matching prefix/suffix of reference/query
      * Also excludes N mismatches
      */
-     if ((lRef?(lRef - RefNpos.left <= LEN_BUFFER):!lRef) || ((RefNpos.right - rRef) <= LEN_BUFFER)) {
+     if ((lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) || ((RefNpos.right - rRef) <= commonData::lenBuffer)) {
         rRMEM = RefNpos.right;
         lRMEM = RefNpos.left;
         return;
@@ -295,14 +295,14 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
       * Note that one less character is compared due to a mismatch
       */
      if (rRef-lRef < static_cast<uint64_t>(commonData::minMemLen)) {
-         if ((lRef?(lRef - RefNpos.left <= LEN_BUFFER):!lRef) || ((RefNpos.right - rRef) <= LEN_BUFFER)) {
+         if ((lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) || ((RefNpos.right - rRef) <= commonData::lenBuffer)) {
              rRMEM = RefNpos.right;
              lRMEM = RefNpos.left;
          }
          return;
      }
 
-     if (!((lQue?(lQue - QueryNpos.left <= LEN_BUFFER):!lQue) || ((QueryNpos.right + 2 - rQue) <= LEN_BUFFER))) {
+     if (!((lQue?(lQue - QueryNpos.left <= commonData::lenBuffer):!lQue) || ((QueryNpos.right + 2 - rQue) <= commonData::lenBuffer))) {
         lQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - rQue) - 1):(QueryNpos.left + (QueryNpos.right - rQue)));
         rQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - lQue) - 1):(QueryNpos.left + (QueryNpos.right - lQue)));
         arrayTmpFile.getInvertedRepeats(lQtmp, rQtmp, QueryFile, rRef, lRef, RefFile, vecSeqInfo);
@@ -478,8 +478,8 @@ void checkCommandLineOptions(uint32_t &options)
     }
 
     if (IS_LENGTH_DEF(options)){
-        if (commonData::minMemLen <= 2){
-            cout << "ERROR: -l cannot be less than or equal to one!" << endl;
+        if (commonData::minMemLen <= commonData::kmerSize){
+            cout << "ERROR: -l cannot be less than or equal to the k-mer length 15!" << endl;
             exit(EXIT_FAILURE);
         }
     }
@@ -488,7 +488,7 @@ void checkCommandLineOptions(uint32_t &options)
 void print_help_msg()
 {
     cout <<  endl;
-    cout << "pal-MEM Version 1.0.0, Jul. 6, 2020" << endl;
+    cout << "pal-MEM Version 1.1.0, Jul. 6, 2020" << endl;
     cout << "Adapted from E-MEM Version 1.0.2, Dec. 12, 2017, by Nilesh Khiste and Lucian Ilie" << endl;
     cout <<  endl;
     cout << "pal-MEM outputs two fasta files and a tab-delimited file. One fasta file contains reads" << endl;
@@ -582,7 +582,7 @@ int main (int argc, char *argv[])
                 exit(EXIT_FAILURE);
             }
             commonData::minMemLen = 2*std::stoi(argv[n+1]);
-            commonData::kmerSize = commonData::minMemLen + (2 - LEN_BUFFER/2);
+            commonData::lenBuffer = commonData::minMemLen - 2;
             n+=2;
         }else if (boost::equals(argv[n],"-d")){
             if (IS_SPLIT_SIZE_DEF(options)) {

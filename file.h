@@ -32,7 +32,6 @@ using namespace std;
 #define DATATYPE_WIDTH          64 	// number of bits
 #define RANDOM_SEQ_SIZE         10
 #define NUM_TMP_FILES           24
-#define LEN_BUFFER              40
 
 class commonData {
   public:
@@ -41,9 +40,11 @@ class commonData {
     static int32_t numThreads;
     static int32_t kmerSize;
     static char nucmer_path[256];
+    static int32_t lenBuffer;
 };
 
 int32_t commonData::minMemLen=48; // 2 bit representation
+int32_t commonData::lenBuffer=46;
 int32_t commonData::d=1;
 int32_t commonData::numThreads=1;
 int32_t commonData::kmerSize=30; //2 bit representation
