@@ -40,6 +40,8 @@ The program can be run in both serial and parallel mode. The parallel mode has a
 
 -l set the minimum length of a match. Default: 24
 
+-k set the k-mer length. Default: 15
+
 -d set the split size. Default: 1. The option -d is used for splitting the sequences into two or more parts. By default this value is set to 1, which means no splitting. This option with value >1 will reduce the overall memory requirement of the program. For large genomic files (such as metagenomic files over 4 Gigabytes), it is recommended to increase d when RAM is limited, otherwise the program will fail (see example below).
 
 -t number of threads. Default: 1. The option -t is used for running the program in parallel mode. The default value is set to 1, which means serial mode. This option with value > 1 will reduce overall running time of the program.
@@ -47,9 +49,9 @@ The program can be run in both serial and parallel mode. The parallel mode has a
 -h show possible options
 
 ## EXAMPLE
-To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a split size of 20 on a machine with 8 threads:
+To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a k-mer length of 18, a split size of 20 on a machine with 8 threads:
 ```
-pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -d 20 -t 8
+pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -k 18 -d 20 -t 8
 ```
 
 ## INSTALLATION

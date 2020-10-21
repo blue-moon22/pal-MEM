@@ -49,6 +49,7 @@
 #define IS_FASTAU_DEF(x)  (x & FASTAU)
 #define IS_OUT_FILE_DEF(x)  (x & OUT_FILE)
 #define IS_LENGTH_DEF(x)	(x & LENGTH)
+#define IS_KMER_SIZE_DEF(x) (x & KMER_SIZE)
 #define IS_SPLIT_SIZE_DEF(x)	(x & SPLIT_SIZE)
 #define IS_NUM_THREADS_DEF(x)	(x & NUM_THREADS)
 
@@ -57,6 +58,7 @@
 #define SET_FASTAU(x)   (x |= FASTAU)
 #define SET_OUT_FILE(x) (x |= OUT_FILE)
 #define SET_LENGTH(x)		(x |= LENGTH)
+#define SET_KMER_SIZE(x)  (x |= KMER_SIZE)
 #define SET_SPLIT_SIZE(x)	(x |= SPLIT_SIZE)
 #define SET_NUM_THREADS(x)	(x |= NUM_THREADS)
 

@@ -483,6 +483,19 @@ void checkCommandLineOptions(uint32_t &options)
             exit(EXIT_FAILURE);
         }
     }
+
+    if (IS_KMER_SIZE_DEF(options)){
+        if (commonData::kmerSize <= 0){
+            cout << "ERROR: -k cannot be less than or equal to zero!" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        if (commonData::kmerSize > CHARS2BITS(28))
+        {
+            cout << "ERROR: kmer-size cannot be greater than 28" << endl;
+            exit( EXIT_FAILURE );
+        }
+    }
 }
 
 void print_help_msg()
@@ -506,6 +519,7 @@ void print_help_msg()
     cout << endl;
     cout << "Optional:" << endl;
     cout << "-l\t" << "set the minimum length of a match. Default: 24" << endl;
+    cout << "-k\t" << "set the k-mer length. Default: 15" << endl; 
     cout << "-d\t" << "set the split size. Default: 1" << endl;
     cout << "-t\t" << "number of threads. Default: 1" << endl;
     cout << "-h\t" << "show possible options" << endl;
@@ -608,6 +622,18 @@ int main (int argc, char *argv[])
             SET_NUM_THREADS(options);
             commonData::numThreads = std::stoi(argv[n+1]);
             n+=2;
+          }else if (boost::equals(argv[n],"-k")){
+              if (IS_KMER_SIZE_DEF(options)) {
+                  cout << "ERROR: Kmer size argument passed multiple times!" << endl;
+                  exit(EXIT_FAILURE);
+              }
+              if (!argv[n+1] || !is_numeric(argv[n+1])){
+                  cout << "ERROR: Invalid value for -k option!" << endl;
+                  exit(EXIT_FAILURE);
+              }
+              SET_KMER_SIZE(options);
+              commonData::kmerSize = 2*std::stoi(argv[n+1]);
+              n+=2;
         }else if (argv[n][0] != '-'){
             cout << "ERROR: option must start with '-'!" << endl;
             exit(EXIT_FAILURE);
