@@ -1,5 +1,5 @@
 # pal-MEM
-Identifying Reads with Inverted Terminal Repeats from Large Genomes Using Efficient Computation of Maximal Exact Matches
+Identifying inverted repeats in large genomic read files using efficient computation of Maximal Exact Matches (MEMs)
 
 ## DESCRIPTION
 
