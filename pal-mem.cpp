@@ -501,7 +501,7 @@ void checkCommandLineOptions(uint32_t &options)
 void print_help_msg()
 {
     cout <<  endl;
-    cout << "pal-MEM Version 1.1.0, Jul. 6, 2020" << endl;
+    cout << "pal-MEM Version 2.1.0, Mar. 7, 2021" << endl;
     cout << "Adapted from E-MEM Version 1.0.2, Dec. 12, 2017, by Nilesh Khiste and Lucian Ilie" << endl;
     cout <<  endl;
     cout << "pal-MEM outputs two fasta files and a tab-delimited file. One fasta file contains reads" << endl;
@@ -519,7 +519,7 @@ void print_help_msg()
     cout << endl;
     cout << "Optional:" << endl;
     cout << "-l\t" << "set the minimum length of a match. Default: 24" << endl;
-    cout << "-k\t" << "set the k-mer length. Default: 15" << endl; 
+    cout << "-k\t" << "set the k-mer length. Default: 15" << endl;
     cout << "-d\t" << "set the split size. Default: 1" << endl;
     cout << "-t\t" << "number of threads. Default: 1" << endl;
     cout << "-h\t" << "show possible options" << endl;
@@ -675,6 +675,7 @@ int main (int argc, char *argv[])
     vector<seqData> querySeqInfo;
     querySeqInfo.reserve(QueryFile.getNumSequences());
     QueryFile.generateSeqPos(querySeqInfo);
+    cout << querySeqInfo.size() << endl;
 
     QueryFile.setReverseFile();
 
@@ -706,10 +707,10 @@ int main (int argc, char *argv[])
     cout << "Writing fasta files..." << endl;
     if (IS_FASTA1_DEF(options) && IS_FASTA2_DEF(options)){
         vector<string> filenames = {fasta1, fasta2};
-        OutFiles.writeFiles(querySeqInfo, filenames, outPrefix + "_no_ITR.fasta", outPrefix + "_ITR.fasta");
+        OutFiles.writeFiles(querySeqInfo, filenames, outPrefix, outPrefix);
     } else if (IS_FASTAU_DEF(options)) {
         vector<string> filenames = {fastaU};
-        OutFiles.writeFiles(querySeqInfo, filenames, outPrefix + "_no_ITR.fasta", outPrefix + "_ITR.fasta");
+        OutFiles.writeFiles(querySeqInfo, filenames, outPrefix, outPrefix);
     }
 
     QueryFile.closeFile();

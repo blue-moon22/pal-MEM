@@ -58,6 +58,7 @@ class seqData {
     std::string seq;
     std::string header;
     int keep=1;
+    int pair_file_no;
     seqData()
     {
         start=0;
@@ -604,6 +605,7 @@ class seqFileReadInfo {
                       if(!strName.empty()) {
                           s.start=CHARS2BITS(j);
                           s.end=CHARS2BITS(i-1);
+                          s.pair_file_no=1;
                           s.seq.assign(strtok(const_cast<char *>(strName.c_str())," \t\n"));
                           vecSeqInfo.push_back(s);
                           s.seq.clear();
@@ -623,6 +625,7 @@ class seqFileReadInfo {
                           if(!strName.empty()) {
                               s.start=CHARS2BITS(j);
                               s.end=CHARS2BITS(i-1);
+                              s.pair_file_no=2;
                               s.seq.assign(strtok(const_cast<char *>(strName.c_str())," \t\n"));
                               vecSeqInfo.push_back(s);
                               s.seq.clear();
@@ -766,65 +769,101 @@ public:
         seqData s;
         uint64_t lineNum = 0;
         string line;
-
-        fstream palFile;
-        palFile.open(ITRFilename, ios::out);
-        if(!palFile.is_open()) {
-            cout << "ERROR: unable to open " << ITRFilename << " file" << endl;
-            exit( EXIT_FAILURE );
-        }
-
-        fstream outFile;
-        outFile.open(nonITRFilename, ios::out);
-        if(!outFile.is_open()) {
-            cout << "ERROR: unable to open " << nonITRFilename << " file" << endl;
-            exit( EXIT_FAILURE );
-        }
+        uint64_t totalNumLines=vecSeqInfo.size();
 
         if (filenames.size() >= 1) {
+            fstream palFile1;
+            fstream outFile1;
+            string ITRFilename1;
+            string nonITRFilename1;
+
+            if (filenames.size() == 1) {
+                ITRFilename1 = ITRFilename + "_IR.fasta";
+                nonITRFilename1 = nonITRFilename + "_discord_non_IR.fasta";
+            } else {
+                ITRFilename1 = ITRFilename + "_IR_1.fasta";
+                nonITRFilename1 = nonITRFilename + "_discord_non_IR_1.fasta";
+            }
+
+            palFile1.open(ITRFilename1, ios::out);
+            if(!palFile1.is_open()) {
+                cout << "ERROR: unable to open " << ITRFilename1 << " file" << endl;
+                exit( EXIT_FAILURE );
+            }
+
+            outFile1.open(nonITRFilename1, ios::out);
+            if(!outFile1.is_open()) {
+                cout << "ERROR: unable to open " << nonITRFilename1 << " file" << endl;
+                exit( EXIT_FAILURE );
+            }
+
             fstream file1;
             file1.open(filenames[0], ios::in);
             while (getline(file1, line).good()) {
                 if (line[0] == '>') {
                     if (vecSeqInfo[lineNum].keep) {
-                        line = strtok(const_cast<char *>(line.c_str()), " \t\n");
-                        writeString(line, outFile);
-                    } else {
-                        writeString(vecSeqInfo[lineNum].header, palFile);
-                    }
+                        if (!vecSeqInfo[totalNumLines/2 + lineNum].keep) { // If the paired read contains an IR
+                            line = strtok(const_cast<char *>(line.c_str()), " \t\n");
+                            writeString(line, outFile1);
+                        }
+                    } else
+                        writeString(vecSeqInfo[lineNum].header, palFile1);
                 } else {
-                    if (vecSeqInfo[lineNum].keep)
-                        writeString(line, outFile);
-                    else
-                        writeString(line, palFile);
+                    if (vecSeqInfo[lineNum].keep) {
+                        if (!vecSeqInfo[totalNumLines/2 + lineNum].keep) // If the paired read contains an IR
+                            writeString(line, outFile1);
+                    } else
+                        writeString(line, palFile1);
                     ++lineNum;
                 }
             }
             file1.close();
+            palFile1.close();
+            outFile1.close();
             if (filenames.size() == 2) {
+                fstream palFile2;
+                fstream outFile2;
+
+                string ITRFilename2 = ITRFilename + "_IR_2.fasta";
+                string nonITRFilename2 = nonITRFilename + "_discord_non_IR_2.fasta";
+
+                palFile2.open(ITRFilename2, ios::out);
+                if(!palFile2.is_open()) {
+                    cout << "ERROR: unable to open " << ITRFilename2 << " file" << endl;
+                    exit( EXIT_FAILURE );
+                }
+
+                outFile2.open(nonITRFilename2, ios::out);
+                if(!outFile2.is_open()) {
+                    cout << "ERROR: unable to open " << nonITRFilename2 << " file" << endl;
+                    exit( EXIT_FAILURE );
+                }
+
                 fstream file2;
-                file2.open(filenames[0], ios::in);
+                file2.open(filenames[1], ios::in);
                 while (getline(file2, line).good()) {
                     if (line[0] == '>') {
                         if (vecSeqInfo[lineNum].keep) {
-                            line = strtok(const_cast<char *>(line.c_str()), " \t\n");
-                            writeString(line, outFile);
-                        } else {
-                            writeString(vecSeqInfo[lineNum].header, palFile);
-                        }
+                            if (!vecSeqInfo[lineNum - totalNumLines/2].keep) {
+                                line = strtok(const_cast<char *>(line.c_str()), " \t\n");
+                                writeString(line, outFile2);
+                            }
+                        } else
+                            writeString(vecSeqInfo[lineNum].header, palFile2);
                     } else {
-                      if (vecSeqInfo[lineNum].keep)
-                          writeString(line, outFile);
-                      else
-                          writeString(line, palFile);
+                        if (vecSeqInfo[lineNum].keep) {
+                            if (!vecSeqInfo[lineNum - totalNumLines/2].keep)
+                                writeString(line, outFile2);
+                        } else
+                            writeString(line, palFile2);
                       ++lineNum;
                     }
                 }
                 file2.close();
+                palFile2.close();
+                outFile2.close();
             }
         }
-        palFile.close();
-        outFile.close();
     }
 };
 
