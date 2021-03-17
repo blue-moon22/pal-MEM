@@ -765,7 +765,7 @@ public:
         file << content << "\n";
     }
 
-    void writeFiles(vector<seqData> &vecSeqInfo, vector<string> &filenames, string nonITRFilename, string ITRFilename) {
+    void writeFiles(vector<seqData> &vecSeqInfo, vector<string> &filenames, string nonIRFilename, string IRFilename) {
         seqData s;
         uint64_t lineNum = 0;
         string line;
@@ -774,26 +774,26 @@ public:
         if (filenames.size() >= 1) {
             fstream palFile1;
             fstream outFile1;
-            string ITRFilename1;
-            string nonITRFilename1;
+            string IRFilename1;
+            string nonIRFilename1;
 
             if (filenames.size() == 1) {
-                ITRFilename1 = ITRFilename + "_IR.fasta";
-                nonITRFilename1 = nonITRFilename + "_discord_non_IR.fasta";
+                IRFilename1 = IRFilename + "_IR.fasta";
+                nonIRFilename1 = nonIRFilename + "_discord_non_IR.fasta";
             } else {
-                ITRFilename1 = ITRFilename + "_IR_1.fasta";
-                nonITRFilename1 = nonITRFilename + "_discord_non_IR_1.fasta";
+                IRFilename1 = IRFilename + "_IR_1.fasta";
+                nonIRFilename1 = nonIRFilename + "_discord_non_IR_1.fasta";
             }
 
-            palFile1.open(ITRFilename1, ios::out);
+            palFile1.open(IRFilename1, ios::out);
             if(!palFile1.is_open()) {
-                cout << "ERROR: unable to open " << ITRFilename1 << " file" << endl;
+                cout << "ERROR: unable to open " << IRFilename1 << " file" << endl;
                 exit( EXIT_FAILURE );
             }
 
-            outFile1.open(nonITRFilename1, ios::out);
+            outFile1.open(nonIRFilename1, ios::out);
             if(!outFile1.is_open()) {
-                cout << "ERROR: unable to open " << nonITRFilename1 << " file" << endl;
+                cout << "ERROR: unable to open " << nonIRFilename1 << " file" << endl;
                 exit( EXIT_FAILURE );
             }
 
@@ -824,18 +824,18 @@ public:
                 fstream palFile2;
                 fstream outFile2;
 
-                string ITRFilename2 = ITRFilename + "_IR_2.fasta";
-                string nonITRFilename2 = nonITRFilename + "_discord_non_IR_2.fasta";
+                string IRFilename2 = IRFilename + "_IR_2.fasta";
+                string nonIRFilename2 = nonIRFilename + "_discord_non_IR_2.fasta";
 
-                palFile2.open(ITRFilename2, ios::out);
+                palFile2.open(IRFilename2, ios::out);
                 if(!palFile2.is_open()) {
-                    cout << "ERROR: unable to open " << ITRFilename2 << " file" << endl;
+                    cout << "ERROR: unable to open " << IRFilename2 << " file" << endl;
                     exit( EXIT_FAILURE );
                 }
 
-                outFile2.open(nonITRFilename2, ios::out);
+                outFile2.open(nonIRFilename2, ios::out);
                 if(!outFile2.is_open()) {
-                    cout << "ERROR: unable to open " << nonITRFilename2 << " file" << endl;
+                    cout << "ERROR: unable to open " << nonIRFilename2 << " file" << endl;
                     exit( EXIT_FAILURE );
                 }
 
@@ -1198,6 +1198,7 @@ class tmpFilesInfo {
 
     void getInvertedRepeats(uint64_t &lQue, uint64_t &rQue, seqFileReadInfo &QueryFile, uint64_t &rRef, uint64_t &lRef, seqFileReadInfo &RefFile, vector<seqData> &vecSeqInfo) {
         mapObject QueryNpos;
+        mapObject RefNpos;
         seqData q, r;
         vector<seqData>::iterator seqitQ, seqitR;
         string currHeader;
@@ -1216,6 +1217,12 @@ class tmpFilesInfo {
             QueryFile.getKmerLeftnRightBoundForNs(lQue, QueryNpos);
             (*seqitQ).header = '>' + (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
             (*seqitQ).keep = 0;
+        }
+
+        if ((*seqitR).keep) {
+            QueryFile.getKmerLeftnRightBoundForNs(lRef, RefNpos);
+            (*seqitR).header = '>' + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
+            (*seqitR).keep = 0;
         }
     }
 

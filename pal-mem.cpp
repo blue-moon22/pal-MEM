@@ -653,7 +653,7 @@ int main (int argc, char *argv[])
     sprintf(commonData::nucmer_path, "%s/%d_tmp", getenv("NUCMER_E_MEM_OUTPUT_DIRPATH")?getenv("NUCMER_E_MEM_OUTPUT_DIRPATH"):".",getpid());
 
     tmpFilesInfo arrayTmpFile(0);
-    arrayTmpFile.openFiles(ios::out|ios::binary, 0, outPrefix + "_ITR.tab");
+    arrayTmpFile.openFiles(ios::out|ios::binary, 0, outPrefix + "_IR.tab");
 
     cout << "Opening fasta files..." << endl;
     if (IS_FASTA1_DEF(options) && IS_FASTA2_DEF(options)){

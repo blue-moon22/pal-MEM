@@ -5,6 +5,54 @@ Identifying inverted repeats in large genomic read files using efficient computa
 
 pal-MEM finds inverted terminal repeats (ITRs) in large genomes, including metagenomes. It is modified from the program [E-MEM](https://github.com/lucian-ilie/E-MEM) by N. Khiste, L. Ilie [E-MEM: efficient computation of maximal exact matched for very large genomes](http://bioinformatics.oxfordjournals.org/content/31/4/509.short)
 
+## INSTALLATION
+
+### Download binaries
+[Available here](https://github.com/blue-moon22/pal-MEM/releases) for Mac OS (built on Catalina v10.15.6) and Linux
+
+### Or install from source
+#### Requirements
+- pal-MEM requires a 64-bit system
+- [Boost](https://www.boost.org/)
+- [cmake](https://cmake.org/download/)
+
+First clone the repository and go into the pal-MEM directory, then follow steps below depending on your operating system.
+```
+git clone https://github.com/blue-moon22/pal-MEM.git
+cd pal-MEM
+mkdir build
+cd build
+```
+
+#### For Mac OS
+- By default, Mac OS uses clang as its compiler for C++. If not already installed, you must install cmake, the GCC compiler and boost. The easiest way is to install using [Homebrew](https://brew.sh/). Once brew is installed:
+```
+brew install cmake boost gcc
+CXX=/usr/local/Cellar/gcc/<gcc_version>/bin/g++-<version> cmake ..
+make
+```
+
+#### For Linux
+```
+cmake ..
+make
+```
+
+#### For Linux (where boost is not installed with root access)
+```
+boost_location=<wherever boost installed containing lib and include directories>
+LD_LIBRARY_PATH=${boost_location}/lib:$LD_LIBRARY_PATH
+LIBRARY_PATH=${boost_location}/lib:$LIBRARY_PATH
+INCLUDE=${boost_location}/include/boost:$INCLUDE
+C_INCLUDE_PATH=${boost_location}/include/boost:$C_INCLUDE_PATH
+INCLUDE_PATH=${boost_location}/include/boost:$INCLUDE_PATH
+
+BOOST_INCLUDEDIR=${boost_location}/include BOOST_LIBRARYDIR=${boost_location}/lib cmake ..
+make
+```
+- If using HPC when running pal-mem, ensure paths are set above.
+
+
 ### USAGE
 ```
 pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -o <output prefix>  [options]
@@ -18,21 +66,26 @@ Type *pal-mem -h* for a list of options.
 
 ### OUTPUT
 
-pal-MEM outputs a tab-delimited file and two fasta files. The tab-delimited file contains the original sequence names of reads containing the ITR pair with the first and second columns representing the first and second read of the pair, respectively.
+pal-MEM outputs a tab-delimited file and two fasta files (if a single fasta file is specified) or four fasta files (if paired fasta files are specified). The tab-delimited file with suffix `_IR.tab` contains the original sequence names of reads containing the inverted repeats (IRs) with the first and second columns representing the first and second read of the pair, respectively.
 
-    Seq1409_ERR589353.1592_FCC4C01ACXX:7:1101:11563:2918#GCGGAACT/1_f1	Seq35410689_ERR589541.11558754_FCD14R7ACXX:2:1308:15750:53071#CTCGTCCG/1_f1
-    Seq3649_ERR589353.4045_FCC4C01ACXX:7:1101:6219:4203#GCGGAACT/1_f1	Seq29675265_ERR589541.5713831_FCD14R7ACXX:2:1204:4038:103263#CTCGTCCG/1_f1
-    Seq5633_ERR589353.6277_FCC4C01ACXX:7:1101:7124:5063#GCGGAACT/1_f1	Seq17102433_ERR589353.17765993_FCC4C01ACXX:7:2205:21103:80820#GCGGAACT/1_f1
+    Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/1_f1	Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/1_f1
+    Seq4972_ERR589346.5141_FCC4C01ACXX:6:1101:21190:4913#AAGTCTCT/1_f1	Seq3747_ERR589346.3872_FCC4C01ACXX:6:1101:3886:4252#AAGTCTCT/1_f1
+    Seq7491_ERR589346.7724_FCC4C01ACXX:6:1101:11071:6396#AAGTCTCT/1_f1	Seq1796_ERR589346.1851_FCC4C01ACXX:6:1101:14914:3103#AAGTCTCT/1_f1
     ...
 
-One fasta file contains reads with inverted terminal repeats (ITRs). The sequence name is reported with "LCoord" and "RCoord" values representing the coordinates of the ITR. For example, the ITR pair of length 41 is situated in the first and second read from 28th to 68th and from 31st to 71st nucleotide, respectively.
+The fasta file(s) with suffix `_IR.fasta` (if single file) or `_IR_1.fasta` and `_IR_2.fasta` (if paired files) contains reads with inverted repeats (IRs). The sequence name is reported with "LCoord" and "RCoord" values representing the coordinates of the ITR. For example, in the first file `_IR_1.fasta`, the IR pair of length 41 is situated in the first and second read from 28th to 68th and from 31st to 71st nucleotide, respectively.
 
-    >Seq1409_ERR589353.1592_FCC4C01ACXX:7:1101:11563:2918#GCGGAACT/1_f1_LCoord_28_RCoord_68
-    AAGGTTTGATCCTTCTTATCGTCATTATCGAAGGTCTTAGGTCCTGCGAACTCATCCGTTACAACTTCATAGCCCTTGTCTGTCAATTCTTTCAGACGGG
-    >Seq35410689_ERR589541.11558754_FCD14R7ACXX:2:1308:15750:53071#CTCGTCCG/1_f1_LCoord_31_RCoord_71
-    CGTCTGAAAGAATTGACAGACAAGGGTTACGAAGTTGTAACGGATGAGTTCGCAGGACCTAAGACCTTCGACAATGATGATAAGAAGGATCAAACCTTCA
+    >Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/1_f1_LCoord_38_RCoord_64
+    AGCCTCTGGTAGGGCTAATTGCACCAAATGTCCCAATGCCCAAGTAACGGCATAATCATTACCTTGCAAATACCCATCTTGTTTTTCGGTTGCCCCCAC
+    >Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/1_f1_LCoord_30_RCoord_56
+    GCAAGTGAAAAACAAGATGGATATTTGTTAGGTAATGATTATGCCGTTACTTGGGCTCTAGGGCATTTGGTGCAATTAGCCCTCCCAGAGGCTTATGGTT
 
-The other fasta file contains the rest of the reads that do not contain ITRs with their original headers.
+The fasta file(s) with suffix `_discord_non_IR.fasta` (if single file) or `_discord_non_IR_1.fasta` and `_discord_non_IR_2.fasta` (if paired files) contains reads that do not contain IRs but are paired to reads that do contain IRs. For example, if the reads paired to the above do not contain IRs, then the second file `_discord_non_IR_2.fasta` would contain:
+
+    >Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/2_f2
+    CAATCCTCAAAAGGACATTACTGATAAAGTTTCTTCTACCAAACAAAAAGCTGAAACTTCTAAAGCCAAAGAAGAAAAACAACCTCAAAAGCAATCAGAA
+    >Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/2_f2
+    CCTTTGAAAAGGTTTTTGACAGTGCAAATATTCATAGATATAGCGGAAGATCAGTTCTCCTTCACGACCTGCATCGGTGGCTACAATAATGGAACTACAC
 
 ## OPTIONS
 
@@ -53,45 +106,3 @@ To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files 
 ```
 pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -k 18 -d 20 -t 8
 ```
-
-## INSTALLATION
-
-### Requirements:
-- pal-MEM requires a 64-bit system
-- [Boost](https://www.boost.org/)
-- [cmake](https://cmake.org/download/)
-
-First clone the repository and go into the pal-MEM directory, then follow steps below depending on your operating system.
-```
-git clone https://github.com/blue-moon22/pal-MEM.git
-cd pal-MEM
-mkdir build
-cd build
-```
-
-### For Mac OS X
-- By default, Mac OS X uses clang as its compiler for C++. If not already installed, you must install the GCC compiler and locate the executable, which should be */usr/local/bin/g++-(version)*. Use this as the CXX option for cmake.
-```
-CXX=/usr/local/bin/g++-9 cmake ..
-make
-```
-
-### For Linux
-```
-cmake ..
-make
-```
-
-### For Linux (where boost is not installed with root access)
-```
-boost_location=<wherever boost installed containing lib and include directories>
-LD_LIBRARY_PATH=${boost_location}/lib:$LD_LIBRARY_PATH
-LIBRARY_PATH=${boost_location}/lib:$LIBRARY_PATH
-INCLUDE=${boost_location}/include/boost:$INCLUDE
-C_INCLUDE_PATH=${boost_location}/include/boost:$C_INCLUDE_PATH
-INCLUDE_PATH=${boost_location}/include/boost:$INCLUDE_PATH
-
-BOOST_INCLUDEDIR=${boost_location}/include BOOST_LIBRARYDIR=${boost_location}/lib cmake ..
-make
-```
-- If using HPC when running pal-mem, ensure paths are set above.
