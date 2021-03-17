@@ -505,8 +505,8 @@ void print_help_msg()
     cout << "Adapted from E-MEM Version 1.0.2, Dec. 12, 2017, by Nilesh Khiste and Lucian Ilie" << endl;
     cout <<  endl;
     cout << "pal-MEM outputs two fasta files and a tab-delimited file. One fasta file contains reads" << endl;
-    cout << "with inverted terminal repeats (ITRs) and the other file contains reads without ITRs." << endl;
-    cout << "The tab-delimited file contains the original headers of read pairs containing the ITRs." << endl;
+    cout << "with inverted repeats (IRs) and the other file contains reads without IRs." << endl;
+    cout << "The tab-delimited file contains the original headers of read pairs containing the IRs." << endl;
     cout << endl;
     cout << "Usage: pal-mem [required] [optional]" << endl;
     cout << endl;
@@ -675,7 +675,6 @@ int main (int argc, char *argv[])
     vector<seqData> querySeqInfo;
     querySeqInfo.reserve(QueryFile.getNumSequences());
     QueryFile.generateSeqPos(querySeqInfo);
-    cout << querySeqInfo.size() << endl;
 
     QueryFile.setReverseFile();
 
