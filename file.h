@@ -779,10 +779,10 @@ public:
 
             if (filenames.size() == 1) {
                 IRFilename1 = IRFilename + "_IR.fasta";
-                nonIRFilename1 = nonIRFilename + "_discord_non_IR.fasta";
+                nonIRFilename1 = nonIRFilename + "_paired_to_IR.fasta";
             } else {
                 IRFilename1 = IRFilename + "_IR_1.fasta";
-                nonIRFilename1 = nonIRFilename + "_discord_non_IR_1.fasta";
+                nonIRFilename1 = nonIRFilename + "_paired_to_IR_1.fasta";
             }
 
             palFile1.open(IRFilename1, ios::out);
@@ -801,18 +801,16 @@ public:
             file1.open(filenames[0], ios::in);
             while (getline(file1, line).good()) {
                 if (line[0] == '>') {
-                    if (vecSeqInfo[lineNum].keep) {
-                        if (!vecSeqInfo[totalNumLines/2 + lineNum].keep) { // If the paired read contains an IR
-                            line = strtok(const_cast<char *>(line.c_str()), " \t\n");
-                            writeString(line, outFile1);
-                        }
-                    } else
+                    if (!vecSeqInfo[totalNumLines/2 + lineNum].keep) {
+                        line = strtok(const_cast<char *>(line.c_str()), " \t\n");
+                        writeString(line, outFile1);
+                    }
+                    if (!vecSeqInfo[lineNum].keep)
                         writeString(vecSeqInfo[lineNum].header, palFile1);
                 } else {
-                    if (vecSeqInfo[lineNum].keep) {
-                        if (!vecSeqInfo[totalNumLines/2 + lineNum].keep) // If the paired read contains an IR
-                            writeString(line, outFile1);
-                    } else
+                    if (!vecSeqInfo[totalNumLines/2 + lineNum].keep)
+                        writeString(line, outFile1);
+                    if (!vecSeqInfo[lineNum].keep)
                         writeString(line, palFile1);
                     ++lineNum;
                 }
@@ -825,7 +823,7 @@ public:
                 fstream outFile2;
 
                 string IRFilename2 = IRFilename + "_IR_2.fasta";
-                string nonIRFilename2 = nonIRFilename + "_discord_non_IR_2.fasta";
+                string nonIRFilename2 = nonIRFilename + "_paired_to_IR_2.fasta";
 
                 palFile2.open(IRFilename2, ios::out);
                 if(!palFile2.is_open()) {
@@ -843,18 +841,16 @@ public:
                 file2.open(filenames[1], ios::in);
                 while (getline(file2, line).good()) {
                     if (line[0] == '>') {
-                        if (vecSeqInfo[lineNum].keep) {
-                            if (!vecSeqInfo[lineNum - totalNumLines/2].keep) {
-                                line = strtok(const_cast<char *>(line.c_str()), " \t\n");
-                                writeString(line, outFile2);
-                            }
-                        } else
+                        if (!vecSeqInfo[lineNum - totalNumLines/2].keep) {
+                            line = strtok(const_cast<char *>(line.c_str()), " \t\n");
+                            writeString(line, outFile2);
+                        }
+                        if (!vecSeqInfo[lineNum].keep)
                             writeString(vecSeqInfo[lineNum].header, palFile2);
                     } else {
-                        if (vecSeqInfo[lineNum].keep) {
-                            if (!vecSeqInfo[lineNum - totalNumLines/2].keep)
-                                writeString(line, outFile2);
-                        } else
+                        if (!vecSeqInfo[lineNum - totalNumLines/2].keep)
+                            writeString(line, outFile2);
+                        if (!vecSeqInfo[lineNum].keep)
                             writeString(line, palFile2);
                       ++lineNum;
                     }
