@@ -1216,7 +1216,7 @@ class tmpFilesInfo {
         }
 
         if ((*seqitR).keep) {
-            QueryFile.getKmerLeftnRightBoundForNs(lRef, RefNpos);
+            RefFile.getKmerLeftnRightBoundForNs(lRef, RefNpos);
             (*seqitR).header = '>' + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
             (*seqitR).keep = 0;
         }
