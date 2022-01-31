@@ -1213,10 +1213,12 @@ class tmpFilesInfo {
 
         if ((*seqitQ).keep) {
             (*seqitQ).keep = 0;
+            (*seqitQ).header = ">" + (*seqitQ).seq;
         }
 
         if ((*seqitR).keep) {
             (*seqitR).keep = 0;
+            (*seqitR).header = ">" + (*seqitR).seq;
         }
     }
 
