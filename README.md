@@ -66,18 +66,17 @@ Type *pal-mem -h* for a list of options.
 
 ### OUTPUT
 
-pal-MEM outputs a tab-delimited file and two fasta files (if a single fasta file is specified) or four fasta files (if paired fasta files are specified). The tab-delimited file with suffix `_IR.tab` contains the original sequence names of reads containing the inverted repeats (IRs) with the first and second columns representing the first and second read of the pair, respectively.
+pal-MEM outputs a tab-delimited file and two fasta files (if a single fasta file is specified) or four fasta files (if paired fasta files are specified). The tab-delimited file with suffix `_IR.tab` contains the original sequence names of reads containing the inverted repeats (IRs) with the first and second columns representing the first and second read of the pair, respectively. The sequence name is reported with "LCoord" and "RCoord" values representing the coordinates of the ITR.
 
-    Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/1_f1	Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/1_f1
-    Seq4972_ERR589346.5141_FCC4C01ACXX:6:1101:21190:4913#AAGTCTCT/1_f1	Seq3747_ERR589346.3872_FCC4C01ACXX:6:1101:3886:4252#AAGTCTCT/1_f1
-    Seq7491_ERR589346.7724_FCC4C01ACXX:6:1101:11071:6396#AAGTCTCT/1_f1	Seq1796_ERR589346.1851_FCC4C01ACXX:6:1101:14914:3103#AAGTCTCT/1_f1
+    Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/1_f1_LCoord_38_RCoord_64	Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/1_f1_LCoord_30_RCoord_56
+    Seq4972_ERR589346.5141_FCC4C01ACXX:6:1101:21190:4913#AAGTCTCT/1_f1_LCoord_45_RCoord_60	Seq3747_ERR589346.3872_FCC4C01ACXX:6:1101:3886:4252#AAGTCTCT/1_f1_LCoord_51_RCoord_66
     ...
 
-The fasta file(s) with suffix `_IR.fasta` (if single file) or `_IR_1.fasta` and `_IR_2.fasta` (if paired files) contains reads with inverted repeats (IRs). The sequence name is reported with "LCoord" and "RCoord" values representing the coordinates of the ITR. For example, in the first file `_IR_1.fasta`, the IR pair of length 41 is situated in the first and second read from 28th to 68th and from 31st to 71st nucleotide, respectively.
+The fasta file(s) with suffix `_IR.fasta` (if single file) or `_IR_1.fasta` and `_IR_2.fasta` (if paired files) contains reads with inverted repeats (IRs).
 
-    >Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/1_f1_LCoord_38_RCoord_64
+    >Seq2691_ERR589346.2764_FCC4C01ACXX:6:1101:14662:3637#AAGTCTCT/1
     AGCCTCTGGTAGGGCTAATTGCACCAAATGTCCCAATGCCCAAGTAACGGCATAATCATTACCTTGCAAATACCCATCTTGTTTTTCGGTTGCCCCCAC
-    >Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/1_f1_LCoord_30_RCoord_56
+    >Seq422_ERR589346.468_FCC4C01ACXX:6:1101:11875:2371#AAGTCTCT/1
     GCAAGTGAAAAACAAGATGGATATTTGTTAGGTAATGATTATGCCGTTACTTGGGCTCTAGGGCATTTGGTGCAATTAGCCCTCCCAGAGGCTTATGGTT
 
 The fasta file(s) with suffix `_discord_non_IR.fasta` (if single file) or `_discord_non_IR_1.fasta` and `_discord_non_IR_2.fasta` (if paired files) contains reads that do not contain IRs but are paired to reads that do contain IRs. For example, if the reads paired to the above do not contain IRs, then the second file `_discord_non_IR_2.fasta` would contain:
@@ -95,14 +94,12 @@ The program can be run in both serial and parallel mode. The parallel mode has a
 
 -k set the k-mer length. Default: 15
 
--d set the split size. Default: 1. The option -d is used for splitting the sequences into two or more parts. By default this value is set to 1, which means no splitting. This option with value >1 will reduce the overall memory requirement of the program. For large genomic files (such as metagenomic files over 4 Gigabytes), it is recommended to increase d when RAM is limited, otherwise the program will fail (see example below).
-
 -t number of threads. Default: 1. The option -t is used for running the program in parallel mode. The default value is set to 1, which means serial mode. This option with value > 1 will reduce overall running time of the program.
 
 -h show possible options
 
 ## EXAMPLE
-To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a k-mer length of 18, a split size of 20 on a machine with 8 threads:
+To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a k-mer length of 18 on a machine with 8 threads:
 ```
-pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -k 18 -d 20 -t 8
+pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -k 18 -t 8
 ```

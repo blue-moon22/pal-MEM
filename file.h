@@ -1207,17 +1207,15 @@ class tmpFilesInfo {
         r.end = lRef;
         seqitR = lower_bound(vecSeqInfo.begin(), vecSeqInfo.end(), r, seqData());
 
-        tabFile << (*seqitQ).seq << "\t" << (*seqitR).seq << "\n";
+        QueryFile.getKmerLeftnRightBoundForNs(lQue, QueryNpos);
+        RefFile.getKmerLeftnRightBoundForNs(lRef, RefNpos);
+        tabFile << (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2) << "\t" << (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2) << "\n";
 
         if ((*seqitQ).keep) {
-            QueryFile.getKmerLeftnRightBoundForNs(lQue, QueryNpos);
-            (*seqitQ).header = '>' + (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
             (*seqitQ).keep = 0;
         }
 
         if ((*seqitR).keep) {
-            RefFile.getKmerLeftnRightBoundForNs(lRef, RefNpos);
-            (*seqitR).header = '>' + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
             (*seqitR).keep = 0;
         }
     }

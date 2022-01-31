@@ -463,13 +463,6 @@ void checkCommandLineOptions(uint32_t &options)
         exit(EXIT_FAILURE);
     }
 
-    if (IS_SPLIT_SIZE_DEF(options)){
-        if (commonData::d <= 0){
-            cout << "ERROR: -d cannot be less than or equal to zero!" << endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-
     if (IS_NUM_THREADS_DEF(options)){
         if (commonData::numThreads <= 0){
             cout << "ERROR: -t cannot be less than or equal to zero!" << endl;
@@ -520,7 +513,6 @@ void print_help_msg()
     cout << "Optional:" << endl;
     cout << "-l\t" << "set the minimum length of a match. Default: 24" << endl;
     cout << "-k\t" << "set the k-mer length. Default: 15" << endl;
-    cout << "-d\t" << "set the split size. Default: 1" << endl;
     cout << "-t\t" << "number of threads. Default: 1" << endl;
     cout << "-h\t" << "show possible options" << endl;
 }
@@ -597,18 +589,6 @@ int main (int argc, char *argv[])
             }
             commonData::minMemLen = 2*std::stoi(argv[n+1]);
             commonData::lenBuffer = commonData::minMemLen - 2;
-            n+=2;
-        }else if (boost::equals(argv[n],"-d")){
-            if (IS_SPLIT_SIZE_DEF(options)) {
-                cout << "ERROR: Split size argument passed multiple times!" << endl;
-                exit(EXIT_FAILURE);
-            }
-            if (!argv[n+1] || !is_numeric(argv[n+1])){
-                cout << "ERROR: Invalid value for -d option!" << endl;
-                exit(EXIT_FAILURE);
-            }
-            SET_SPLIT_SIZE(options);
-            commonData::d = std::stoi(argv[n+1]);
             n+=2;
         }else if (boost::equals(argv[n],"-t")){
             if (IS_NUM_THREADS_DEF(options)) {
