@@ -34,20 +34,22 @@
 #define FASTA2  0x00000002
 #define FASTAU  0x00000004
 #define OUT_FILE    0x00000008
-#define LENGTH			0x00000010
-#define REF_FILE		0x00000020
-#define QUERY_FILE		0x00000040
-#define KMER_SIZE		0x0000080
-#define NUM_THREADS		0x00000100
-#define REL_REV_QUEPOS		0x00000200
-#define FOUR_COL_OUTPUT		0x00000400
-#define LEN_IN_HEADER		0x00000800
+#define MIN_LENGTH			0x00000010
+#define MAX_LENGTH			0x00000020
+#define REF_FILE		0x00000040
+#define QUERY_FILE		0x00000080
+#define KMER_SIZE		0x0000100
+#define NUM_THREADS		0x00000200
+#define REL_REV_QUEPOS		0x00000400
+#define FOUR_COL_OUTPUT		0x00000800
+#define LEN_IN_HEADER		0x00001000
 
 #define IS_FASTA1_DEF(x)  (x & FASTA1)
 #define IS_FASTA2_DEF(x)  (x & FASTA2)
 #define IS_FASTAU_DEF(x)  (x & FASTAU)
 #define IS_OUT_FILE_DEF(x)  (x & OUT_FILE)
-#define IS_LENGTH_DEF(x)	(x & LENGTH)
+#define IS_MIN_LENGTH_DEF(x)	(x & MIN_LENGTH)
+#define IS_MAX_LENGTH_DEF(x)	(x & MAX_LENGTH)
 #define IS_KMER_SIZE_DEF(x) (x & KMER_SIZE)
 #define IS_NUM_THREADS_DEF(x)	(x & NUM_THREADS)
 
@@ -55,7 +57,8 @@
 #define SET_FASTA2(x)   (x |= FASTA2)
 #define SET_FASTAU(x)   (x |= FASTAU)
 #define SET_OUT_FILE(x) (x |= OUT_FILE)
-#define SET_LENGTH(x)		(x |= LENGTH)
+#define SET_MIN_LENGTH(x)		(x |= MIN_LENGTH)
+#define SET_MAX_LENGTH(x)		(x |= MAX_LENGTH)
 #define SET_KMER_SIZE(x)  (x |= KMER_SIZE)
 #define SET_NUM_THREADS(x)	(x |= NUM_THREADS)
 
