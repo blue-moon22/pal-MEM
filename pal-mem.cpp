@@ -294,7 +294,7 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
      /* if current rRef/rQue plus matchSize smaller than minMEMLength, then simply return.
       * Note that one less character is compared due to a mismatch
       */
-     if (rRef-lRef < static_cast<uint64_t>(commonData::minMemLen)) {
+     if ((rRef-lRef < static_cast<uint64_t>(commonData::minMemLen)) || (rRef-lRef > static_cast<uint64_t>(commonData::maxMemLen))) {
          if ((lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) || ((RefNpos.right - rRef) <= commonData::lenBuffer)) {
              rRMEM = RefNpos.right;
              lRMEM = RefNpos.left;
@@ -470,7 +470,7 @@ void checkCommandLineOptions(uint32_t &options)
         }
     }
 
-    if (IS_LENGTH_DEF(options)){
+    if (IS_MIN_LENGTH_DEF(options)){
         if (commonData::minMemLen <= commonData::kmerSize){
             cout << "ERROR: -l cannot be less than or equal to the k-mer length 15!" << endl;
             exit(EXIT_FAILURE);
@@ -578,17 +578,29 @@ int main (int argc, char *argv[])
             outPrefix = argv[n+1];
             n+=2;
         }else if(boost::equals(argv[n],"-l")){
-            if (IS_LENGTH_DEF(options)) {
-                cout << "ERROR: Length argument passed multiple times!" << endl;
+            if (IS_MIN_LENGTH_DEF(options)) {
+                cout << "ERROR: Minimum length argument passed multiple times!" << endl;
                 exit(EXIT_FAILURE);
             }
-            SET_LENGTH(options);
+            SET_MIN_LENGTH(options);
             if (!argv[n+1] || !is_numeric(argv[n+1])){
                 cout << "ERROR: Invalid value for -l option!" << endl;
                 exit(EXIT_FAILURE);
             }
             commonData::minMemLen = 2*std::stoi(argv[n+1]);
             commonData::lenBuffer = commonData::minMemLen - 2;
+            n+=2;
+        }else if(boost::equals(argv[n],"-m")){
+            if (IS_MAX_LENGTH_DEF(options)) {
+                cout << "ERROR: Maximum length argument passed multiple times!" << endl;
+                exit(EXIT_FAILURE);
+            }
+            SET_MAX_LENGTH(options);
+            if (!argv[n+1] || !is_numeric(argv[n+1])){
+                cout << "ERROR: Invalid value for -m option!" << endl;
+                exit(EXIT_FAILURE);
+            }
+            commonData::maxMemLen = 2*std::stoi(argv[n+1]);
             n+=2;
         }else if (boost::equals(argv[n],"-t")){
             if (IS_NUM_THREADS_DEF(options)) {

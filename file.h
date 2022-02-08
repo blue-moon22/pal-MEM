@@ -36,6 +36,7 @@ using namespace std;
 class commonData {
   public:
     static int32_t minMemLen;
+    static int32_t maxMemLen;
     static int32_t d;
     static int32_t numThreads;
     static int32_t kmerSize;
@@ -44,6 +45,7 @@ class commonData {
 };
 
 int32_t commonData::minMemLen=48; // 2 bit representation
+int32_t commonData::maxMemLen=200;
 int32_t commonData::lenBuffer=46;
 int32_t commonData::d=1;
 int32_t commonData::numThreads=1;

@@ -55,11 +55,11 @@ make
 
 ### USAGE
 ```
-pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -o <output prefix>  [options]
+pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -l <minimum length>  -m <maximum length>  -o <output prefix>  [options]
 ```
 OR
 ```
-pal-mem  -fu <single fasta file>  -o <output prefix>  [options]
+pal-mem  -fu <single fasta file>  -l <minimum length>  -m <maximum length>  -o <output prefix>  [options]
 ```
 
 Type *pal-mem -h* for a list of options.
@@ -92,6 +92,8 @@ The program can be run in both serial and parallel mode. The parallel mode has a
 
 -l set the minimum length of a match. Default: 24
 
+-m set the maximum length of a match. Default: 100
+
 -k set the k-mer length. Default: 15
 
 -t number of threads. Default: 1. The option -t is used for running the program in parallel mode. The default value is set to 1, which means serial mode. This option with value > 1 will reduce overall running time of the program.
@@ -99,7 +101,7 @@ The program can be run in both serial and parallel mode. The parallel mode has a
 -h show possible options
 
 ## EXAMPLE
-To get ITRs with a minimum length of 30 from paired-end metagenomic fasta files with a k-mer length of 18 on a machine with 8 threads:
+To get ITRs with a minimum length of 30 and maximum length of 50 from paired-end metagenomic fasta files with a k-mer length of 18 on a machine with 8 threads:
 ```
-pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -k 18 -t 8
+pal-mem -f1 example_1.fasta -f2 example_1.fasta -o example -l 30 -m 50 -k 18 -t 8
 ```
