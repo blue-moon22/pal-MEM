@@ -55,11 +55,11 @@ make
 
 ### USAGE
 ```
-pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -l <minimum length>  -m <maximum length>  -o <output prefix>  [options]
+pal-mem  -f1 <paired-end fasta file 1>  -f2 <paired-end fasta file 2>  -o <output prefix>  [options]
 ```
 OR
 ```
-pal-mem  -fu <single fasta file>  -l <minimum length>  -m <maximum length>  -o <output prefix>  [options]
+pal-mem  -fu <single fasta file>  -o <output prefix>  [options]
 ```
 
 Type *pal-mem -h* for a list of options.
