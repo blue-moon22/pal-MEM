@@ -181,6 +181,14 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
         }else {
             lRef-=matchSize;
             lQue-=matchSize;
+            if (matchSize > static_cast<uint64_t>(commonData::maxMemLen)) {
+                if (lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) {
+                    rRMEM = RefNpos.right;
+                    lRMEM = RefNpos.left;
+                }
+                return;
+            }
+
             if (mismatch) {
                 if (matchSize==2)
                     break;
@@ -189,6 +197,18 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
             }
         }
     }
+
+    /* Ignore reverse complements of the same ORF, i.e. where matching prefix/suffix of reference/query
+     * Also excludes N mismatches
+     */
+    if (lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) {
+        rRMEM = RefNpos.right;
+        lRMEM = RefNpos.left;
+        return;
+    }
+
+    if (lQue?(lQue - QueryNpos.left <= commonData::lenBuffer):!lQue)
+        return;
 
     if (totalRBits-lRef+2 < static_cast<uint64_t>(commonData::minMemLen))
         return;
@@ -259,8 +279,24 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
             currQ <<= matchSize;
             rRef+=matchSize;
             rQue+=matchSize;
+            if (matchSize > static_cast<uint64_t>(commonData::maxMemLen)) {
+                if ((RefNpos.right - rRef) <= commonData::lenBuffer) {
+                    rRMEM = RefNpos.right;
+                    lRMEM = RefNpos.left;
+                }
+                return;
+            }
         }
     } // loop until extension reached to the right
+
+    if ((RefNpos.right - rRef) <= commonData::lenBuffer) {
+        rRMEM = RefNpos.right;
+        lRMEM = RefNpos.left;
+        return;
+    }
+
+    if ((QueryNpos.right - rQue) <= commonData::lenBuffer)
+        return;
 
     /* Adjust rRef and rQue locations */
 
@@ -282,32 +318,22 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
         rQue=totalQBits;
     }
 
-    /* Ignore reverse complements of the same ORF, i.e. where matching prefix/suffix of reference/query
-     * Also excludes N mismatches
-     */
-     if ((lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) || ((RefNpos.right - rRef) <= commonData::lenBuffer)) {
+    if (((RefNpos.right - rRef) <= commonData::lenBuffer) || (lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef)) {
         rRMEM = RefNpos.right;
         lRMEM = RefNpos.left;
         return;
-     }
-
-     /* if current rRef/rQue plus matchSize smaller than minMEMLength, then simply return.
-      * Note that one less character is compared due to a mismatch
-      */
-     if ((rRef-lRef < static_cast<uint64_t>(commonData::minMemLen)) || (rRef-lRef > static_cast<uint64_t>(commonData::maxMemLen))) {
-         if ((lRef?(lRef - RefNpos.left <= commonData::lenBuffer):!lRef) || ((RefNpos.right - rRef) <= commonData::lenBuffer)) {
-             rRMEM = RefNpos.right;
-             lRMEM = RefNpos.left;
-         }
-         return;
-     }
-
-     if (!((lQue?(lQue - QueryNpos.left <= commonData::lenBuffer):!lQue) || ((QueryNpos.right + 2 - rQue) <= commonData::lenBuffer))) {
-        lQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - rQue) - 1):(QueryNpos.left + (QueryNpos.right - rQue)));
-        rQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - lQue) - 1):(QueryNpos.left + (QueryNpos.right - lQue)));
-        arrayTmpFile.getInvertedRepeats(lQtmp, rQtmp, QueryFile, rRef, lRef, RefFile, vecSeqInfo);
-        rQMEM = QueryNpos.right;
     }
+
+    if (((QueryNpos.right - rQue) <= commonData::lenBuffer) || (lQue?(lQue - QueryNpos.left <= commonData::lenBuffer):!lQue))
+        return;
+
+    if (rRef-lRef > static_cast<uint64_t>(commonData::maxMemLen) || rRef-lRef < static_cast<uint64_t>(commonData::minMemLen))
+        return;
+
+    lQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - rQue) - 1):(QueryNpos.left + (QueryNpos.right - rQue)));
+    rQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - lQue) - 1):(QueryNpos.left + (QueryNpos.right - lQue)));
+    arrayTmpFile.getInvertedRepeats(lQtmp, rQtmp, QueryFile, rRef, lRef, RefFile, vecSeqInfo);
+    rQMEM = QueryNpos.right;
 }
 
 void reportMEM(Knode* &refHash, uint64_t totalBases, uint64_t totalQBases, seqFileReadInfo &RefFile, seqFileReadInfo &QueryFile, tmpFilesInfo &arrayTmpFile, vector<seqData> &vecSeqInfo)
@@ -494,7 +520,7 @@ void checkCommandLineOptions(uint32_t &options)
 void print_help_msg()
 {
     cout <<  endl;
-    cout << "pal-MEM Version 2.1.0, Mar. 7, 2021" << endl;
+    cout << "pal-MEM Version 2.3.4, Feb. 26, 2022" << endl;
     cout << "Adapted from E-MEM Version 1.0.2, Dec. 12, 2017, by Nilesh Khiste and Lucian Ilie" << endl;
     cout <<  endl;
     cout << "pal-MEM outputs two fasta files and a tab-delimited file. One fasta file contains reads" << endl;
