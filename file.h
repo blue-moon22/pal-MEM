@@ -1215,12 +1215,12 @@ class tmpFilesInfo {
 
         if ((*seqitQ).keep) {
             (*seqitQ).keep = 0;
-            (*seqitQ).header = ">" + (*seqitQ).seq;
+            (*seqitQ).header = ">" + (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
         }
 
         if ((*seqitR).keep) {
             (*seqitR).keep = 0;
-            (*seqitR).header = ">" + (*seqitR).seq;
+            (*seqitR).header = ">" + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
         }
     }
 
