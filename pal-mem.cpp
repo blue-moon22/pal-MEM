@@ -484,6 +484,11 @@ void checkCommandLineOptions(uint32_t &options)
         }
     }
 
+    if (!IS_DATABASE_DEF(options)){
+        cout << "ERROR: query file must be passed!" << endl;
+        exit(EXIT_FAILURE);
+    }
+
     if (!IS_OUT_FILE_DEF(options)) {
         cout << "ERROR: output file must be passed!" << endl;
         exit(EXIT_FAILURE);
@@ -520,7 +525,7 @@ void checkCommandLineOptions(uint32_t &options)
 void print_help_msg()
 {
     cout <<  endl;
-    cout << "pal-MEM Version 2.3.4, Feb. 26, 2022" << endl;
+    cout << "pal-MEM Version 2.3.6, Oct. 24, 2022" << endl;
     cout << "Adapted from E-MEM Version 1.0.2, Dec. 12, 2017, by Nilesh Khiste and Lucian Ilie" << endl;
     cout <<  endl;
     cout << "pal-MEM outputs two fasta files and a tab-delimited file. One fasta file contains reads" << endl;
@@ -534,6 +539,7 @@ void print_help_msg()
     cout << "OR" << endl;
     cout << "-fu <filename>\t\t\t" << "fasta file with unpaired reads" << endl;
     cout << endl;
+    cout << "-d <filename>\t\t\t" << "database fasta file" << endl;
     cout << "-o <output prefix>\t\t" << "prefix name of output files" << endl;
     cout << endl;
     cout << "Optional:" << endl;
@@ -549,7 +555,7 @@ int main (int argc, char *argv[])
     uint32_t options=0;
     seqFileReadInfo QueryFile, RefFile;
     outFileReadInfo OutFiles;
-    string fasta1, fasta2, fastaU, outPrefix;
+    string fasta1, fasta2, fastaU, database, outPrefix;
 
     // Check Arguments
     if (argc==1 || argc==2){
@@ -595,6 +601,14 @@ int main (int argc, char *argv[])
             SET_FASTAU(options);
             fastaU = argv[n + 1];
             n += 2;
+        }else if(boost::equals(argv[n], "-d")){
+            if (IS_DATABASE_DEF(options)){
+                cout << "ERROR: d argument passed multiple times!" << endl;
+                exit(EXIT_FAILURE);
+            }
+            SET_DATABASE(options);
+            database = argv[n+1];
+            n+=2;
         } else if(boost::equals(argv[n], "-o")){
             if (IS_OUT_FILE_DEF(options)) {
                 cout << "ERROR: output prefix argument passed multiple times!" << endl;
@@ -677,12 +691,13 @@ int main (int argc, char *argv[])
     if (IS_FASTA1_DEF(options) && IS_FASTA2_DEF(options)){
         vector<string> filenames = {fasta1, fasta2};
         QueryFile.setFiles(filenames);
-        RefFile.setFiles(filenames);
     } else if (IS_FASTAU_DEF(options)) {
         vector<string> filenames = {fastaU};
         QueryFile.setFiles(filenames);
-        RefFile.setFiles(filenames);
     }
+    cout << "Opening query..." << endl;
+    vector<string> database_file = {database};
+    RefFile.setFiles(database_file);
 
     cout << "Generating reverse complement..." << endl;
     QueryFile.generateRevComplement();
