@@ -130,20 +130,20 @@ class seqFileReadInfo {
     uint64_t currPos;
     uint64_t numSequences;
 
-        string& randomStr()
-        {
-             static string str("NNNNNNNNNN");
-             return str;
-        }
+    string& randomStr()
+    {
+         static string str("NNNNNNNNNN");
+         return str;
+    }
 
-        void processTmpString(uint64_t &sz, uint64_t &blockNCount)
-        {
-            string line = strTmp;
-            strTmp.clear();
-            totalBases=0;
-            binReadsLocation=0;
-            processInput(line, sz, blockNCount);
-        }
+    void processTmpString(uint64_t &sz, uint64_t &blockNCount)
+    {
+        string line = strTmp;
+        strTmp.clear();
+        totalBases=0;
+        binReadsLocation=0;
+        processInput(line, sz, blockNCount);
+    }
 
       /*
        * Function converts a character sequence into an array of integers.
@@ -651,6 +651,51 @@ class seqFileReadInfo {
               vecSeqInfo.push_back(s);
               s.seq.clear();
               strName.clear();
+          }
+      }
+
+      void countNumSequencesAndSize() {
+          string line;
+
+          if (numSeqFiles >= 1){
+              while(getline( file1, line ).good()){
+                  size += (line.length()+1);
+                  if(line[0] == '>'){
+                      if(!strName.empty()) {
+                          numSequences++;
+                          size += RANDOM_SEQ_SIZE;
+                          strName.clear();
+                      }
+                      if(!line.empty())
+                          strName=line.substr(1);
+                  }
+              }
+              // Catches the last sequence line
+              if( !strName.empty() ) {
+                  size += (line.length()+1);
+                  numSequences++;
+                  strName.clear();
+              }
+              if (numSeqFiles == 2){
+                  while(getline( file2, line ).good()){
+                      size += (line.length()+1);
+                      if(line[0] == '>'){
+                          if(!strName.empty()) {
+                              numSequences++;
+                              size += RANDOM_SEQ_SIZE;
+                              strName.clear();
+                          }
+                          if(!line.empty())
+                              strName=line.substr(1);
+                      }
+                  }
+                  // Catches the last sequence line
+                  if( !strName.empty() ) {
+                      size += (line.length()+1);
+                      numSequences++;
+                      strName.clear();
+                  }
+              }
           }
       }
 

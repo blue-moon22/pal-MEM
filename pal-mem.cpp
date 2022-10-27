@@ -113,7 +113,7 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
     uint64_t offsetR=0,offsetQ=0;
     uint64_t rRef=currRPos+commonData::kmerSize, rQue=currQPos+commonData::kmerSize; // one character ahead of current match
     uint64_t extLength;
-    uint64_t currR=0, currQ=0, lQtmp=0, rQtmp=0;
+    uint64_t currR=0, currQ=0, lRtmp=0, rRtmp=0;
     int i=0,j=0,mismatch=0,binLength,shortestLenL,shortestLenR;
     uint64_t matchSize=0;
     seqData s;
@@ -330,9 +330,9 @@ void helperReportMem(uint64_t &currRPos, uint64_t &currQPos, uint64_t totalRBits
     if (rRef-lRef > static_cast<uint64_t>(commonData::maxMemLen) || rRef-lRef < static_cast<uint64_t>(commonData::minMemLen))
         return;
 
-    lQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - rQue) - 1):(QueryNpos.left + (QueryNpos.right - rQue)));
-    rQtmp = ((QueryNpos.left == 1)?(QueryNpos.left + (QueryNpos.right - lQue) - 1):(QueryNpos.left + (QueryNpos.right - lQue)));
-    arrayTmpFile.getInvertedRepeats(lQtmp, rQtmp, QueryFile, rRef, lRef, RefFile, vecSeqInfo);
+    lRtmp = ((RefNpos.left == 1)?(RefNpos.left + (RefNpos.right - rRef) - 1):(RefNpos.left + (RefNpos.right - rRef)));
+    rRtmp = ((RefNpos.left == 1)?(RefNpos.left + (RefNpos.right - lRef) - 1):(RefNpos.left + (RefNpos.right - lRef)));
+    arrayTmpFile.getInvertedRepeats(lQue, rQue, QueryFile, rRtmp, lRtmp, RefFile, vecSeqInfo);
     rQMEM = QueryNpos.right;
 }
 
@@ -691,35 +691,33 @@ int main (int argc, char *argv[])
     if (IS_FASTA1_DEF(options) && IS_FASTA2_DEF(options)){
         vector<string> filenames = {fasta1, fasta2};
         QueryFile.setFiles(filenames);
+        QueryFile.countNumSequencesAndSize();
     } else if (IS_FASTAU_DEF(options)) {
         vector<string> filenames = {fastaU};
         QueryFile.setFiles(filenames);
+        QueryFile.countNumSequencesAndSize();
     }
     cout << "Opening query..." << endl;
     vector<string> database_file = {database};
     RefFile.setFiles(database_file);
 
     cout << "Generating reverse complement..." << endl;
-    QueryFile.generateRevComplement();
-    RefFile.setSize(QueryFile.getSize());
-    RefFile.setNumSequences(QueryFile.getNumSequences());
+    RefFile.generateRevComplement();
+    RefFile.setReverseFile();
+    arrayTmpFile.setNumMemsInFile(RefFile.allocBinArray(0), RefFile.getNumSequences());
 
     cout << "Creating seqData..." << endl;
     vector<seqData> querySeqInfo;
     querySeqInfo.reserve(QueryFile.getNumSequences());
     QueryFile.generateSeqPos(querySeqInfo);
 
-    QueryFile.setReverseFile();
-
-    arrayTmpFile.setNumMemsInFile(QueryFile.allocBinArray(0), QueryFile.getNumSequences());
-
-    cout << "Allocate Ref bins..." << endl;
-    RefFile.allocBinArray(1);
+    cout << "Allocate Query bins..." << endl;
+    QueryFile.allocBinArray(0);
 
     RefFile.clearFileFlag();
     QueryFile.clearFileFlag();
-    cout << "Encoding Query sequences..." << endl;
 
+    cout << "Encoding Query sequences..." << endl;
     if (QueryFile.readChunks())
     {
         for (i=0; i<commonData::d; i++) {
