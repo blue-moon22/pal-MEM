@@ -50,7 +50,7 @@ int32_t commonData::lenBuffer=46;
 int32_t commonData::d=1;
 int32_t commonData::numThreads=1;
 int32_t commonData::kmerSize=30; //2 bit representation
-char commonData::nucmer_path[256]={'\0'};\
+char commonData::nucmer_path[256]={'\0'};
 
 
 class seqData {
@@ -58,9 +58,7 @@ class seqData {
     uint64_t start;
     uint64_t end;
     std::string seq;
-    std::string header;
     int keep=1;
-    int pair_file_no;
     seqData()
     {
         start=0;
@@ -607,7 +605,6 @@ class seqFileReadInfo {
                       if(!strName.empty()) {
                           s.start=CHARS2BITS(j);
                           s.end=CHARS2BITS(i-1);
-                          s.pair_file_no=1;
                           s.seq.assign(strtok(const_cast<char *>(strName.c_str())," \t\n"));
                           vecSeqInfo.push_back(s);
                           s.seq.clear();
@@ -627,7 +624,6 @@ class seqFileReadInfo {
                           if(!strName.empty()) {
                               s.start=CHARS2BITS(j);
                               s.end=CHARS2BITS(i-1);
-                              s.pair_file_no=2;
                               s.seq.assign(strtok(const_cast<char *>(strName.c_str())," \t\n"));
                               vecSeqInfo.push_back(s);
                               s.seq.clear();
@@ -853,7 +849,7 @@ public:
                         writeString(line, outFile1);
                     }
                     if (!vecSeqInfo[lineNum].keep)
-                        writeString(vecSeqInfo[lineNum].header, palFile1);
+                        writeString(vecSeqInfo[lineNum].seq, palFile1);
                 } else {
                     if (!vecSeqInfo[totalNumLines/2 + lineNum].keep)
                         writeString(line, outFile1);
@@ -893,7 +889,7 @@ public:
                             writeString(line, outFile2);
                         }
                         if (!vecSeqInfo[lineNum].keep)
-                            writeString(vecSeqInfo[lineNum].header, palFile2);
+                            writeString(vecSeqInfo[lineNum].seq, palFile2);
                     } else {
                         if (!vecSeqInfo[lineNum - totalNumLines/2].keep)
                             writeString(line, outFile2);
@@ -1260,12 +1256,12 @@ class tmpFilesInfo {
 
         if ((*seqitQ).keep) {
             (*seqitQ).keep = 0;
-            (*seqitQ).header = ">" + (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
+            (*seqitQ).seq = ">" + (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
         }
 
         if ((*seqitR).keep) {
             (*seqitR).keep = 0;
-            (*seqitR).header = ">" + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
+            (*seqitR).seq = ">" + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
         }
     }
 
