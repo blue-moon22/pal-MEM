@@ -803,7 +803,7 @@ class outFileReadInfo {
 
 public:
 
-    void writeString(string &content, fstream &file)
+    void writeString(string content, fstream &file)
     {
         file << content << "\n";
     }
@@ -849,7 +849,7 @@ public:
                         writeString(line, outFile1);
                     }
                     if (!vecSeqInfo[lineNum].keep)
-                        writeString(vecSeqInfo[lineNum].seq, palFile1);
+                        writeString(">" + vecSeqInfo[lineNum].seq, palFile1);
                 } else {
                     if (!vecSeqInfo[totalNumLines/2 + lineNum].keep)
                         writeString(line, outFile1);
@@ -889,7 +889,7 @@ public:
                             writeString(line, outFile2);
                         }
                         if (!vecSeqInfo[lineNum].keep)
-                            writeString(vecSeqInfo[lineNum].seq, palFile2);
+                            writeString(">" + vecSeqInfo[lineNum].seq, palFile2);
                     } else {
                         if (!vecSeqInfo[lineNum - totalNumLines/2].keep)
                             writeString(line, outFile2);
@@ -1256,12 +1256,12 @@ class tmpFilesInfo {
 
         if ((*seqitQ).keep) {
             (*seqitQ).keep = 0;
-            (*seqitQ).seq = ">" + (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
+            (*seqitQ).seq = (*seqitQ).seq + "_LCoord_" + to_string(((lQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left)) + 2)/2) + "_RCoord_" + to_string((rQue - (QueryNpos.left==1?QueryNpos.left=0:QueryNpos.left) + 2)/2);
         }
 
         if ((*seqitR).keep) {
             (*seqitR).keep = 0;
-            (*seqitR).seq = ">" + (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
+            (*seqitR).seq = (*seqitR).seq + "_LCoord_" + to_string(((lRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left)) + 2)/2) + "_RCoord_" + to_string((rRef - (RefNpos.left==1?RefNpos.left=0:RefNpos.left) + 2)/2);
         }
     }
 
